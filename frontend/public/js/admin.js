@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const tableBody = document.getElementById("adminTable").querySelector("tbody");
 
     try {
-        const response = await fetch("http://localhost:5000/admin/documents");
+        const response = await fetch("http://16.171.254.197:5000/admin/documents");
         if (!response.ok) {
             throw new Error("Failed to fetch documents");
         }
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Student Details
             const studentCell = document.createElement("td");
-            studentCell.textContent = `${doc.studentId.firstName} ${doc.studentId.lastName} (${doc.studentId.email})`;
+            studentCell.textContent = ${doc.studentId.firstName} ${doc.studentId.lastName} (${doc.studentId.email});
             row.appendChild(studentCell);
 
             // Document Link
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function handleAction(docId, action, row, verifyButton, rejectButton) {
     try {
-        const url = `http://localhost:5000/admin/${action}/${docId}`;
+        const url = http://16.171.254.197:5000/admin/${action}/${docId};
         const method = action === "verify" ? "POST" : "DELETE";
 
         // Disable buttons to prevent duplicate requests
@@ -87,10 +87,10 @@ async function handleAction(docId, action, row, verifyButton, rejectButton) {
                 row.remove();
             }
         } else {
-            alert(data.error || `Failed to ${action} document.`);
+            alert(data.error || Failed to ${action} document.);
         }
     } catch (err) {
-        console.error(`Error during ${action} action:`, err);
+        console.error(Error during ${action} action:, err);
     } finally {
         // Re-enable buttons
         verifyButton.disabled = false;
