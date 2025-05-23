@@ -67,7 +67,7 @@ document.getElementById("registerForm")?.addEventListener("submit", async (e) =>
 
     try {
         // Send data to the server
-        const response = await fetch("http://127.0.0.1:5000/student/register", {
+        const response = await fetch("http://13.49.241.84:5000/student/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(user),
@@ -91,7 +91,7 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
         password: document.getElementById("password").value,
     };
 
-    const response = await fetch("http://localhost:5000/student/login", {
+    const response = await fetch("http://13.49.241.84:5000/student/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
@@ -114,7 +114,7 @@ document.getElementById("uploadForm")?.addEventListener("submit", async (e) => {
     formData.append("studentId", localStorage.getItem("userId"));
 
     try {
-        const response = await fetch("http://localhost:5000/student/upload", {
+        const response = await fetch("http://13.49.241.84:5000/student/upload", {
             method: "POST",
             body: formData,
         });
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const userId = localStorage.getItem("userId");
-        const response = await fetch(`http://localhost:5000/student/documents/${userId}`);
+        const response = await fetch(`http://13.49.241.84:5000/student/documents/${userId}`);
         const documents = await response.json();
 
         documents.forEach((doc) => {
