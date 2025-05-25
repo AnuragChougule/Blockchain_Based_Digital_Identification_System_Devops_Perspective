@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Setup SSH Key
+      - name: Set up SSH key and known hosts
         run: |
           mkdir -p ~/.ssh
           cat << 'EOF' > ~/.ssh/id_rsa
@@ -50,11 +50,11 @@ jobs:
 
       - name: Deploy on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@13.50.167.182 << EOF
-            sudo apt update
-            sudo apt install -y nodejs npm git nginx
+          set -xe
+          ssh -o StrictHostKeyChecking=no ubuntu@13.50.167.182 <<'EOF'
+            sudo apt-get update
+            sudo apt-get install -y nodejs npm git nginx
 
-            # Remove existing code & clone fresh copy
             rm -rf DevOps
             git clone https://QadirTernikar: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@github.com/AnuragChougule/DevOps.git
 
@@ -62,22 +62,18 @@ jobs:
             rm -rf node_modules package-lock.json
             npm install
 
-            # Start backend with pm2
             sudo npm install -g pm2
             pm2 delete all || true
             pm2 start app.js --name backend
 
-            # Start ganache-cli in background
             sudo npm install -g ganache-cli
             pkill -f ganache-cli || true
             nohup ganache-cli -p 7545 > ganache.log 2>&1 &
 
-            # Deploy smart contracts
             cd ../truffle
             truffle compile
             truffle migrate --network development
 
-            # Copy frontend files
             cd ../
             sudo cp -r frontend/* /var/www/html/
             sudo systemctl restart nginx
