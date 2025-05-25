@@ -17,6 +17,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           cat << 'EOF' > ~/.ssh/id_rsa
+          # (Insert your private key here securely, or better: use GitHub secrets and environment variables)
           -----BEGIN RSA PRIVATE KEY-----
           MIIEowIBAAKCAQEAmW3s2jdmInE0oxHGW7tgoEZaXOhjUVCbMDLTCPRH+D3YuXDL
           5dOCOyzxUJEfc6ASVY9wlqUzUHMisnCxV8xvpsCSWkO+vZNL8DwPJ7FISzH0tox5
@@ -46,35 +47,42 @@ jobs:
           -----END RSA PRIVATE KEY-----
           EOF
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 13.50.167.182 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 16.170.245.249 >> ~/.ssh/known_hosts
 
-      - name: Deploy on EC2
+      - name: Deploy and Start Services on EC2
         run: |
           set -xe
-          ssh -o StrictHostKeyChecking=no ubuntu@13.50.167.182 <<'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@16.170.245.249 <<'EOF'
+            # Update and install dependencies
             sudo apt-get update
             sudo apt-get install -y nodejs npm git nginx
 
+            # Clone the latest code
             rm -rf DevOps
-            git clone https://QadirTernikar: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@github.com/AnuragChougule/DevOps.git
+            git clone https://github.com/AnuragChougule/DevOps.git
 
+            # Backend setup
             cd DevOps/backend
             rm -rf node_modules package-lock.json
             npm install
 
+            # Use pm2 to run backend in background (no need for Ctrl+C/Z)
             sudo npm install -g pm2
-            pm2 delete all || true
+            pm2 delete backend || true
             pm2 start app.js --name backend
 
+            # Ganache-cli in background
             sudo npm install -g ganache-cli
             pkill -f ganache-cli || true
-            nohup ganache-cli -p 7545 > ganache.log 2>&1 &
+            nohup ganache-cli -p 7545 > ~/ganache.log 2>&1 &
 
+            # Truffle compile and migrate
             cd ../truffle
             truffle compile
             truffle migrate --network development
 
-            cd ../
+            # Frontend deploy
+            cd ..
             sudo cp -r frontend/* /var/www/html/
             sudo systemctl restart nginx
           EOF
