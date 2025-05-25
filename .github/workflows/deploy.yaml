@@ -17,7 +17,6 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           cat << 'EOF' > ~/.ssh/id_rsa
-          # (Insert your private key here securely, or better: use GitHub secrets and environment variables)
           -----BEGIN RSA PRIVATE KEY-----
           MIIEowIBAAKCAQEAmW3s2jdmInE0oxHGW7tgoEZaXOhjUVCbMDLTCPRH+D3YuXDL
           5dOCOyzxUJEfc6ASVY9wlqUzUHMisnCxV8xvpsCSWkO+vZNL8DwPJ7FISzH0tox5
@@ -53,35 +52,32 @@ jobs:
         run: |
           set -xe
           ssh -o StrictHostKeyChecking=no ubuntu@16.170.245.249 <<'EOF'
-            # Update and install dependencies
+            # Setup git credentials for private repo access (DANGEROUS: for test ONLY)
+            git config --global credential.helper store
+            echo "https://QadirTernikar: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@github.com" > ~/.git-credentials
+
             sudo apt-get update
             sudo apt-get install -y nodejs npm git nginx
 
-            # Clone the latest code
             rm -rf DevOps
             git clone https://github.com/AnuragChougule/DevOps.git
 
-            # Backend setup
             cd DevOps/backend
             rm -rf node_modules package-lock.json
             npm install
 
-            # Use pm2 to run backend in background (no need for Ctrl+C/Z)
             sudo npm install -g pm2
             pm2 delete backend || true
             pm2 start app.js --name backend
 
-            # Ganache-cli in background
             sudo npm install -g ganache-cli
             pkill -f ganache-cli || true
             nohup ganache-cli -p 7545 > ~/ganache.log 2>&1 &
 
-            # Truffle compile and migrate
             cd ../truffle
             truffle compile
             truffle migrate --network development
 
-            # Frontend deploy
             cd ..
             sudo cp -r frontend/* /var/www/html/
             sudo systemctl restart nginx
