@@ -16,33 +16,35 @@ jobs:
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "-----BEGIN RSA PRIVATE KEY-----
-MIIEowIBAAKCAQEAmW3s2jdmInE0oxHGW7tgoEZaXOhjUVCbMDLTCPRH+D3YuXDL
-5dOCOyzxUJEfc6ASVY9wlqUzUHMisnCxV8xvpsCSWkO+vZNL8DwPJ7FISzH0tox5
-FaNAt7T3uQStWy/AP1kmt46lu/4mIKM9oIjgr1E9ziRvjlQYxHmpOt5IDfUHoXRD
-ER+VVMEhU+wRLd5jf3/rdK1fk1IOki++2EKhibAyp5FveAs6Vi/fjyk1bDCn66b3
-wTtmozk7tGJORjac5TP33xFYyFThy4YaRw0PJTosjEHBZloQNj/4S8/rIQhN4eK+
-R2XEW1ISQzagSKKQvRvIqQysu1na8hec0wQtFwIDAQABAoIBAAiWUm9UMm8zDtMh
-p4xyzFGsHlqc1xIyBL2J2q3hnjWSoJKgcYkHcX6GYWs09CGwj9YiFRcZX+ncx9Bc
-5lAXrRgUJxzONdq+Z72mXuLF1VoADcY5zn0bif++LS85x8oWvhfNkZEsdrIy40do
-W4akoo6taVwkReodYtV8SbB1yGqfegCGjUY7jB/c5qMDdo5xNHPEfVZgR7FqAjbT
-P47Lpk7qLsNXS4PRLaWvOM04P2S26Zgt0cAHKdQNrp5k2BKJ1Q3B77xylLSm1oN1
-ke7v6l+K6tluSr/lOp/twGzuWyIBj6oIT8bsN7r3cdoShUFlbGnb9t/c2WB0Zu/K
-/Wx1/KECgYEAy5RCkI4nrFOql/cGJqgMZkDutAdykRwvKyAz0rm7LOQfE+yHPdF2
-/gemJqdJwHfPCsIexS23NZw34ZhBf7APc+SrHLt05TXhtsYx4vBpds9z9miWKh/t
-mqS3H+xORqXcT97U6ODvUWo4JmjyDX3XhlqKyWcPPnTSzYEqat5UwfsCgYEAwO/X
-rbX/13Um1U2tIoDP1UFLEUJnVFls5Q/klbZ0HaVA4XxcoRobiAqjgv6xElcMBsCa
-xHQveRuyt+f16/FPHDBX5ZTK/hg0aayL9AXUW8rvpBvGGX7RV+VCeCaj+eHbwObc
-A8vNXYCnH/OlfiOpaelhNSZfDd7UtF80TIPw8pUCgYEAhE32dLvuTLCTTe/cr4LH
-jCzm9Vlhu6z1erGS/IB4hNQ83lX6DtLy4mVWNgjChbNXe0ZtePgc+Vptds/cwX9K
-i6cxDZtGfTBnYMGt6i8UW4K3eoy+CuJ1KOujl7ubo45ngADxneeRoPfHRi8uIFaI
-m2h8iifQYGbMGYK4bnvP2cECgYBxvHHee43Ii81KrTHFRz49rvH7yLN1LApftlDA
-WQB2gXaP9mn8ppFYTz04+b+U2i/Cw0P5T6y0rjla5Kk6X9SM/4qxUlegFtC/AvK1
-9cHMIwPGMIFFglcSg5n9jnnX0udi/jTxH/F+j1r2IQGMLKWwQ94EIQyj9ppZgk4o
-VRdzSQKBgGaXIldE2OfiY0oyEuyzuggwOaKBd9/JXOhoGSXOzcMrJPXwa9SmUDKQ
-Um3bmwYUM0eZviVl3UFSxxYDckMzWk5ZJFszyOGs8nw10LeVSWAzkVFc108uZmR8
-3OPf9urmtulD/vhioZJp2WE+nAuCr3/dPKHJJQy47E+/iFLMuuDi
------END RSA PRIVATE KEY-----" > ~/.ssh/id_rsa
+          cat << 'EOF' > ~/.ssh/id_rsa
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEowIBAAKCAQEAmW3s2jdmInE0oxHGW7tgoEZaXOhjUVCbMDLTCPRH+D3YuXDL
+          5dOCOyzxUJEfc6ASVY9wlqUzUHMisnCxV8xvpsCSWkO+vZNL8DwPJ7FISzH0tox5
+          FaNAt7T3uQStWy/AP1kmt46lu/4mIKM9oIjgr1E9ziRvjlQYxHmpOt5IDfUHoXRD
+          ER+VVMEhU+wRLd5jf3/rdK1fk1IOki++2EKhibAyp5FveAs6Vi/fjyk1bDCn66b3
+          wTtmozk7tGJORjac5TP33xFYyFThy4YaRw0PJTosjEHBZloQNj/4S8/rIQhN4eK+
+          R2XEW1ISQzagSKKQvRvIqQysu1na8hec0wQtFwIDAQABAoIBAAiWUm9UMm8zDtMh
+          p4xyzFGsHlqc1xIyBL2J2q3hnjWSoJKgcYkHcX6GYWs09CGwj9YiFRcZX+ncx9Bc
+          5lAXrRgUJxzONdq+Z72mXuLF1VoADcY5zn0bif++LS85x8oWvhfNkZEsdrIy40do
+          W4akoo6taVwkReodYtV8SbB1yGqfegCGjUY7jB/c5qMDdo5xNHPEfVZgR7FqAjbT
+          P47Lpk7qLsNXS4PRLaWvOM04P2S26Zgt0cAHKdQNrp5k2BKJ1Q3B77xylLSm1oN1
+          ke7v6l+K6tluSr/lOp/twGzuWyIBj6oIT8bsN7r3cdoShUFlbGnb9t/c2WB0Zu/K
+          /Wx1/KECgYEAy5RCkI4nrFOql/cGJqgMZkDutAdykRwvKyAz0rm7LOQfE+yHPdF2
+          /gemJqdJwHfPCsIexS23NZw34ZhBf7APc+SrHLt05TXhtsYx4vBpds9z9miWKh/t
+          mqS3H+xORqXcT97U6ODvUWo4JmjyDX3XhlqKyWcPPnTSzYEqat5UwfsCgYEAwO/X
+          rbX/13Um1U2tIoDP1UFLEUJnVFls5Q/klbZ0HaVA4XxcoRobiAqjgv6xElcMBsCa
+          xHQveRuyt+f16/FPHDBX5ZTK/hg0aayL9AXUW8rvpBvGGX7RV+VCeCaj+eHbwObc
+          A8vNXYCnH/OlfiOpaelhNSZfDd7UtF80TIPw8pUCgYEAhE32dLvuTLCTTe/cr4LH
+          jCzm9Vlhu6z1erGS/IB4hNQ83lX6DtLy4mVWNgjChbNXe0ZtePgc+Vptds/cwX9K
+          i6cxDZtGfTBnYMGt6i8UW4K3eoy+CuJ1KOujl7ubo45ngADxneeRoPfHRi8uIFaI
+          m2h8iifQYGbMGYK4bnvP2cECgYBxvHHee43Ii81KrTHFRz49rvH7yLN1LApftlDA
+          WQB2gXaP9mn8ppFYTz04+b+U2i/Cw0P5T6y0rjla5Kk6X9SM/4qxUlegFtC/AvK1
+          9cHMIwPGMIFFglcSg5n9jnnX0udi/jTxH/F+j1r2IQGMLKWwQ94EIQyj9ppZgk4o
+          VRdzSQKBgGaXIldE2OfiY0oyEuyzuggwOaKBd9/JXOhoGSXOzcMrJPXwa9SmUDKQ
+          Um3bmwYUM0eZviVl3UFSxxYDckMzWk5ZJFszyOGs8nw10LeVSWAzkVFc108uZmR8
+          3OPf9urmtulD/vhioZJp2WE+nAuCr3/dPKHJJQy47E+/iFLMuuDi
+          -----END RSA PRIVATE KEY-----
+          EOF
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 13.50.167.182 >> ~/.ssh/known_hosts
 
@@ -52,7 +54,7 @@ Um3bmwYUM0eZviVl3UFSxxYDckMzWk5ZJFszyOGs8nw10LeVSWAzkVFc108uZmR8
             sudo apt update
             sudo apt install -y nodejs npm git nginx
 
-            # Remove existing code & clone fresh copy with token
+            # Remove existing code & clone fresh copy
             rm -rf DevOps
             git clone https://QadirTernikar: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@github.com/AnuragChougule/DevOps.git
 
@@ -60,7 +62,7 @@ Um3bmwYUM0eZviVl3UFSxxYDckMzWk5ZJFszyOGs8nw10LeVSWAzkVFc108uZmR8
             rm -rf node_modules package-lock.json
             npm install
 
-            # Start backend with pm2 for persistent process
+            # Start backend with pm2
             sudo npm install -g pm2
             pm2 delete all || true
             pm2 start app.js --name backend
