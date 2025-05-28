@@ -16,8 +16,7 @@ const path=require("path");
 
 
 // Connect to Ganache
-const useRemote = true; // set this based on your deployment logic
-const web3 = new Web3(useRemote ? "http://13.48.234.161:7545" : "http://127.0.0.1:7545");
+const web3 = new Web3("http://127.0.0.1:7545");
 
 // Load contract artifacts
 function loadContract(contractName) {
