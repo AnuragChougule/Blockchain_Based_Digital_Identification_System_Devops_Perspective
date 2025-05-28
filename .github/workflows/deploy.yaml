@@ -47,6 +47,7 @@ jobs:
           EOF
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts || (sleep 5 && ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts)
+
       - name: Deploy and Start Services on EC2
         run: |
           set -xe
@@ -67,16 +68,27 @@ jobs:
 
             sudo npm install -g pm2
             sudo npm install -g truffle
+            sudo npm install -g ganache-cli
+
             pm2 delete backend || true
             pm2 start app.js --name backend
 
-            sudo npm install -g ganache-cli
             pkill -f ganache-cli || true
             nohup ganache-cli -p 7545 > ~/ganache.log 2>&1 &
 
+            # Wait for Ganache to start
+            echo "Waiting for Ganache on port 7545..."
+            while ! nc -z localhost 7545; do
+              sleep 1
+            done
+            echo "Ganache started!"
+
+            # Print Ganache log for debugging
+            tail -n 20 ~/ganache.log
+
             cd ../truffle
             truffle compile
-            truffle migrate --network development
+            truffle migrate --network development --verbose
 
             cd ..
             sudo cp -r frontend/* /var/www/html/
