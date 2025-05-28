@@ -69,10 +69,6 @@ jobs:
             rm -f package-lock.json | tee ~/rm-package-lock.log
             npm install | tee ~/npm-install.log
 
-            nohup npm start > ~/npm-start.log 2>&1 &
-            sleep 10
-            tail -n 20 ~/npm-start.log
-
             sudo npm install -g ganache-cli | tee ~/ganache-cli-install.log
             nohup ganache-cli -p 7545 > ~/ganache.log 2>&1 &
             sleep 5
@@ -85,6 +81,12 @@ jobs:
 
             sudo systemctl status nginx | tee ~/nginx-status.log
             sudo tail -n 20 /var/log/nginx/error.log || true
+
+            # Start backend at the very end
+            cd ~/DevOps/backend
+            nohup npm start > ~/npm-start.log 2>&1 &
+            sleep 10
+            tail -n 20 ~/npm-start.log
 
             echo "--- Node/NPM Version ---"
             cat ~/node-npm-version.log
