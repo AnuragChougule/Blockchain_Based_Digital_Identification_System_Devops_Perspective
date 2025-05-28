@@ -46,12 +46,12 @@ jobs:
           -----END RSA PRIVATE KEY-----
           EOF
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 16.170.245.249 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts
 
       - name: Deploy and Start Services on EC2
         run: |
           set -xe
-          ssh -o StrictHostKeyChecking=no ubuntu@16.170.245.249 <<'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@13.48.234.161 <<'EOF'
             # Setup git credentials for private repo access (DANGEROUS: for test ONLY)
             git config --global credential.helper store
             echo "https://QadirTernikar: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@github.com" > ~/.git-credentials
