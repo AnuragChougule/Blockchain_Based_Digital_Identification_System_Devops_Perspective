@@ -46,8 +46,7 @@ jobs:
           -----END RSA PRIVATE KEY-----
           EOF
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts
-
+          ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts || (sleep 5 && ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts)
       - name: Deploy and Start Services on EC2
         run: |
           set -xe
