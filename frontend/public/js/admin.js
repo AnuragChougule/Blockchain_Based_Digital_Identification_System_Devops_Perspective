@@ -2,7 +2,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const tableBody = document.getElementById("adminTable").querySelector("tbody");
 
     try {
-        const response = await fetch("http://13.49.241.84:5000/admin/documents");
+        const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+    ? "http://127.0.0.1:5000"
+    : "http://13.49.241.84:5000";
+
+const response = await fetch(`${baseURL}/admin/documents`);
+
         if (!response.ok) {
             throw new Error("Failed to fetch documents");
         }
@@ -67,7 +72,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function handleAction(docId, action, row, verifyButton, rejectButton) {
     try {
-        const url = `http://13.49.241.84:5000/admin/${action}/${docId}`;
+        const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+    ? "http://127.0.0.1:5000"
+    : "http://13.49.241.84:5000";
+
+        const url = `${baseURL}/admin/${action}/${docId}`;
         const method = action === "verify" ? "POST" : "DELETE";
 
         // Disable buttons to prevent duplicate requests

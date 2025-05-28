@@ -67,11 +67,15 @@ document.getElementById("registerForm")?.addEventListener("submit", async (e) =>
 
     try {
         // Send data to the server
-        const response = await fetch("http://13.49.241.84:5000/student/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
-        });
+        const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+    ? "http://127.0.0.1:5000"
+    : "http://13.49.241.84:5000";
+
+    const response = await fetch(`${baseURL}/student/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+});
 
         // Handle server response
         const data = await response.json();
@@ -91,11 +95,16 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
         password: document.getElementById("password").value,
     };
 
-    const response = await fetch("http://13.49.241.84:5000/student/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-    });
+    const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+    ? "http://127.0.0.1:5000"
+    : "http://13.49.241.84:5000";
+
+const response = await fetch(`${baseURL}/student/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+});
+
     const data = await response.json();
     if (response.ok) {
         localStorage.setItem("token", data.token);
@@ -113,17 +122,22 @@ document.getElementById("uploadForm")?.addEventListener("submit", async (e) => {
     formData.append("document", document.getElementById("document").files[0]);
     formData.append("studentId", localStorage.getItem("userId"));
 
-    try {
-        const response = await fetch("http://13.49.241.84:5000/student/upload", {
-            method: "POST",
-            body: formData,
-        });
-        const data = await response.json();
-        alert(data.message);
-    } catch (err) {
-        console.error("Error uploading document:", err);
-        alert("Failed to upload document.");
-    }
+    const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+    ? "http://127.0.0.1:5000"
+    : "http://13.49.241.84:5000";
+
+try {
+    const response = await fetch(`${baseURL}/student/upload`, {
+        method: "POST",
+        body: formData,
+    });
+    const data = await response.json();
+    alert(data.message);
+} catch (err) {
+    console.error("Error uploading document:", err);
+    alert("Failed to upload document.");
+}
+
 });
 
 
@@ -131,9 +145,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const tableBody = document.getElementById("documentTable").querySelector("tbody");
 
     try {
-        const userId = localStorage.getItem("userId");
-        const response = await fetch(`http://13.49.241.84:5000/student/documents/${userId}`);
-        const documents = await response.json();
+        const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+    ? "http://127.0.0.1:5000"
+    : "http://13.49.241.84:5000";
+
+const userId = localStorage.getItem("userId");
+const response = await fetch(`${baseURL}/student/documents/${userId}`);
+const documents = await response.json();
+
 
         documents.forEach((doc) => {
             const row = document.createElement("tr");
