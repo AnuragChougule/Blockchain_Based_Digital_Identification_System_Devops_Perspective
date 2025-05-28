@@ -1,12 +1,10 @@
-name: CI/CD Deploy to EC2
+name: Full Deploy & Log Output
 
 on:
   push:
-    branches:
-      - master
 
 jobs:
-  deploy:
+  full-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,80 +15,52 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           cat << 'EOF' > ~/.ssh/id_rsa
+          # (Insert your private key here)
           -----BEGIN RSA PRIVATE KEY-----
-          MIIEowIBAAKCAQEAmW3s2jdmInE0oxHGW7tgoEZaXOhjUVCbMDLTCPRH+D3YuXDL
-          5dOCOyzxUJEfc6ASVY9wlqUzUHMisnCxV8xvpsCSWkO+vZNL8DwPJ7FISzH0tox5
-          FaNAt7T3uQStWy/AP1kmt46lu/4mIKM9oIjgr1E9ziRvjlQYxHmpOt5IDfUHoXRD
-          ER+VVMEhU+wRLd5jf3/rdK1fk1IOki++2EKhibAyp5FveAs6Vi/fjyk1bDCn66b3
-          wTtmozk7tGJORjac5TP33xFYyFThy4YaRw0PJTosjEHBZloQNj/4S8/rIQhN4eK+
-          R2XEW1ISQzagSKKQvRvIqQysu1na8hec0wQtFwIDAQABAoIBAAiWUm9UMm8zDtMh
-          p4xyzFGsHlqc1xIyBL2J2q3hnjWSoJKgcYkHcX6GYWs09CGwj9YiFRcZX+ncx9Bc
-          5lAXrRgUJxzONdq+Z72mXuLF1VoADcY5zn0bif++LS85x8oWvhfNkZEsdrIy40do
-          W4akoo6taVwkReodYtV8SbB1yGqfegCGjUY7jB/c5qMDdo5xNHPEfVZgR7FqAjbT
-          P47Lpk7qLsNXS4PRLaWvOM04P2S26Zgt0cAHKdQNrp5k2BKJ1Q3B77xylLSm1oN1
-          ke7v6l+K6tluSr/lOp/twGzuWyIBj6oIT8bsN7r3cdoShUFlbGnb9t/c2WB0Zu/K
-          /Wx1/KECgYEAy5RCkI4nrFOql/cGJqgMZkDutAdykRwvKyAz0rm7LOQfE+yHPdF2
-          /gemJqdJwHfPCsIexS23NZw34ZhBf7APc+SrHLt05TXhtsYx4vBpds9z9miWKh/t
-          mqS3H+xORqXcT97U6ODvUWo4JmjyDX3XhlqKyWcPPnTSzYEqat5UwfsCgYEAwO/X
-          rbX/13Um1U2tIoDP1UFLEUJnVFls5Q/klbZ0HaVA4XxcoRobiAqjgv6xElcMBsCa
-          xHQveRuyt+f16/FPHDBX5ZTK/hg0aayL9AXUW8rvpBvGGX7RV+VCeCaj+eHbwObc
-          A8vNXYCnH/OlfiOpaelhNSZfDd7UtF80TIPw8pUCgYEAhE32dLvuTLCTTe/cr4LH
-          jCzm9Vlhu6z1erGS/IB4hNQ83lX6DtLy4mVWNgjChbNXe0ZtePgc+Vptds/cwX9K
-          i6cxDZtGfTBnYMGt6i8UW4K3eoy+CuJ1KOujl7ubo45ngADxneeRoPfHRi8uIFaI
-          m2h8iifQYGbMGYK4bnvP2cECgYBxvHHee43Ii81KrTHFRz49rvH7yLN1LApftlDA
-          WQB2gXaP9mn8ppFYTz04+b+U2i/Cw0P5T6y0rjla5Kk6X9SM/4qxUlegFtC/AvK1
-          9cHMIwPGMIFFglcSg5n9jnnX0udi/jTxH/F+j1r2IQGMLKWwQ94EIQyj9ppZgk4o
-          VRdzSQKBgGaXIldE2OfiY0oyEuyzuggwOaKBd9/JXOhoGSXOzcMrJPXwa9SmUDKQ
-          Um3bmwYUM0eZviVl3UFSxxYDckMzWk5ZJFszyOGs8nw10LeVSWAzkVFc108uZmR8
-          3OPf9urmtulD/vhioZJp2WE+nAuCr3/dPKHJJQy47E+/iFLMuuDi
+          ...
           -----END RSA PRIVATE KEY-----
           EOF
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts || (sleep 5 && ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts)
 
-      - name: Deploy and Start Services on EC2
+      - name: Manual Deploy Script with Live Logging
         run: |
           set -xe
           ssh -o StrictHostKeyChecking=no ubuntu@13.48.234.161 <<'EOF'
-            # Setup git credentials for private repo access (DANGEROUS: for test ONLY)
-            git config --global credential.helper store
-            echo "https://QadirTernikar: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@github.com" > ~/.git-credentials
+            sudo apt update | tee ~/apt-update.log
+            sudo apt install -y nodejs npm git | tee ~/apt-install.log
+            node -v && npm -v | tee ~/node-npm-version.log
 
-            sudo apt-get update
-            sudo apt-get install -y nodejs npm git nginx
-
-            rm -rf DevOps
-            git clone https://github.com/AnuragChougule/DevOps.git
-
+            git clone https://github.com/AnuragChougule/DevOps.git | tee ~/git-clone.log
             cd DevOps/backend
-            rm -rf node_modules package-lock.json
-            npm install
 
-            sudo npm install -g pm2
-            sudo npm install -g truffle
-            sudo npm install -g ganache-cli
+            rm -rf node_modules | tee ~/rm-node_modules.log
+            rm -f package-lock.json | tee ~/rm-package-lock.log
+            npm install | tee ~/npm-install.log
 
-            pm2 delete backend || true
-            pm2 start app.js --name backend
+            nohup npm start > ~/npm-start.log 2>&1 &
+            sleep 10
+            tail -n 20 ~/npm-start.log
 
-            pkill -f ganache-cli || true
+            sudo npm install -g ganache-cli | tee ~/ganache-cli-install.log
             nohup ganache-cli -p 7545 > ~/ganache.log 2>&1 &
-
-            # Wait for Ganache to start
-            echo "Waiting for Ganache on port 7545..."
-            while ! nc -z localhost 7545; do
-              sleep 1
-            done
-            echo "Ganache started!"
-
-            # Print Ganache log for debugging
+            sleep 5
             tail -n 20 ~/ganache.log
 
-            cd ../truffle
-            truffle compile
-            truffle migrate --network development --verbose
-
-            cd ..
-            sudo cp -r frontend/* /var/www/html/
+            sudo apt install -y nginx | tee ~/nginx-install.log
             sudo systemctl restart nginx
+            sudo cp -r ~/DevOps/frontend/* /var/www/html/
+            sudo systemctl restart nginx
+
+            sudo systemctl status nginx | tee ~/nginx-status.log
+            sudo tail -n 20 /var/log/nginx/error.log || true
+
+            echo "--- Node/NPM Version ---"
+            cat ~/node-npm-version.log
+            echo "--- Backend Start Log ---"
+            tail -n 20 ~/npm-start.log
+            echo "--- Ganache Log ---"
+            tail -n 20 ~/ganache.log
+            echo "--- Nginx Status ---"
+            tail -n 10 ~/nginx-status.log
           EOF
