@@ -6,42 +6,39 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 
+// ===== BLOCKCHAIN CODE REMOVED/COMMENTED BELOW =====
 
-const {Web3} = require("web3");
-const fs = require("fs");
-const path=require("path");
+// const { Web3 } = require("web3");
+// // Connect to Ganache
+// const web3 = new Web3("http://127.0.0.1:7545");
 
+// // Load contract artifacts
+// function loadContract(contractName) {
+//   const artifact = JSON.parse(
+//     fs.readFileSync(path.join(`../truffle/build/contracts/${contractName}.json`))
+//   );
+//   return {
+//     abi: artifact.abi,
+//     address: artifact.networks[Object.keys(artifact.networks)[0]].address,
+//   };
+// }
 
-// Connect to Ganache
-const web3 = new Web3("http://127.0.0.1:7545");
+// // Load all contracts
+// const Storage = loadContract("DocumentVerification");
+// const Verification = loadContract("PasswordMatcher");
 
-// Load contract artifacts
-function loadContract(contractName) {
-  const artifact = JSON.parse(
-    fs.readFileSync(path.join( `../truffle/build/contracts/${contractName}.json`))
-  );
-  return {
-    abi: artifact.abi,
-    address: artifact.networks[Object.keys(artifact.networks)[0]].address,
-  };
-}
+// // Instantiate contracts
+// const DV = new web3.eth.Contract(Storage.abi, Storage.address);
+// const verificationContract = new web3.eth.Contract(Verification.abi, Verification.address);
 
-// Load all contracts
-const Storage = loadContract("DocumentVerification");
-const Verification = loadContract("PasswordMatcher");
+// const FromAddress = "0x7f0EeD042004A22e8C24956e569A2Ceb1fA68208";
 
-
-// Instantiate contracts
-const DV = new web3.eth.Contract(Storage.abi, Storage.address);
-const verificationContract = new web3.eth.Contract(Verification.abi, Verification.address);
-
-
-
-
-
+// ===== END BLOCKCHAIN CODE =====
 
 // Middleware
 app.use(cors());
@@ -52,6 +49,7 @@ mongoose
     .connect("mongodb+srv://anuragchougule0160:4yYYz9EkTsxthOpU@cluster0.z1whqqm.mongodb.net/blockchain", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("MongoDB connected"))
     .catch((err) => console.log(err));
+
 // Schema Definitions
 const userSchema = new mongoose.Schema({
     firstName: String,
@@ -77,7 +75,6 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // Watermark Function
 const { PDFDocument } = require("pdf-lib");
-
 
 async function addLogo(binaryData, fileType) {
     try {
@@ -120,13 +117,9 @@ async function addLogo(binaryData, fileType) {
     }
 }
 
-
-
-
-
-
-
 // Routes
+
+// Registration
 app.post("/student/register", async (req, res) => {
     const { firstName, lastName, srn, mobileNumber, email, password } = req.body;
     try {
@@ -139,8 +132,7 @@ app.post("/student/register", async (req, res) => {
     }
 });
 
-const FromAddress="0x7f0EeD042004A22e8C24956e569A2Ceb1fA68208";
-
+// Login (blockchain code commented, using bcrypt only)
 app.post("/student/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -148,14 +140,15 @@ app.post("/student/login", async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        // Hash the input password to compare with the stored hash
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // ===== BLOCKCHAIN PASSWORD MATCHING REMOVED =====
+        // const hashedPassword = await bcrypt.hash(password, 10);
+        // const isMatch = await verificationContract.methods
+        //     .matchPasswords(hashedPassword, user.password)
+        //     .send({ from: FromAddress });
+        // if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-        // Ensure a blockchain transaction is created for the contract call
-        const isMatch = await verificationContract.methods
-            .matchPasswords(hashedPassword, user.password)
-            .send({ from: FromAddress });
-
+        // Use bcrypt compare directly (no blockchain)
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
         // Generate a JWT token for the user
@@ -166,10 +159,7 @@ app.post("/student/login", async (req, res) => {
     }
 });
 
-const crypto = require("crypto");
-const { count } = require("console");
-
-
+// Upload Document (blockchain code commented, only DB used)
 app.post("/student/upload", upload.single("document"), async (req, res) => {
     const { studentId } = req.body;
 
@@ -178,26 +168,19 @@ app.post("/student/upload", upload.single("document"), async (req, res) => {
     }
 
     try {
-        // Create a 32-byte hash of the uploaded document
-        const documentHash = Buffer.alloc(32); // Zero-filled 32-byte buffer
-        req.file.buffer.copy(documentHash, 0, 0, Math.min(32, req.file.buffer.length));
-
-        console.log("Document Hash (Hex):", documentHash.toString("hex"));
-
-        // Call the smart contract's `submitDocument` function
-        const transaction = await DV.methods
-            .submitDocument("0x" + documentHash.toString("hex")) // Pass hash as bytes32
-            .send({ from:FromAddress, gas: 100000 });
-
-        console.log("Transaction:", transaction);
-
-        // Check the event log to confirm if the document was successfully added
-        const event = transaction.events?.DocumentSubmitted;
-        if (!event) {
-            return res.status(409).json({ message: "Document already exists in the system" });
-        }
-
-        console.log("Document successfully submitted:", event.returnValues.documentHash);
+        // ===== BLOCKCHAIN DOCUMENT HASHING AND SUBMISSION REMOVED =====
+        // const documentHash = Buffer.alloc(32); // Zero-filled 32-byte buffer
+        // req.file.buffer.copy(documentHash, 0, 0, Math.min(32, req.file.buffer.length));
+        // console.log("Document Hash (Hex):", documentHash.toString("hex"));
+        // const transaction = await DV.methods
+        //     .submitDocument("0x" + documentHash.toString("hex"))
+        //     .send({ from: FromAddress, gas: 100000 });
+        // console.log("Transaction:", transaction);
+        // const event = transaction.events?.DocumentSubmitted;
+        // if (!event) {
+        //     return res.status(409).json({ message: "Document already exists in the system" });
+        // }
+        // console.log("Document successfully submitted:", event.returnValues.documentHash);
 
         // Save the document in the database
         const document = new Document({
@@ -208,15 +191,14 @@ app.post("/student/upload", upload.single("document"), async (req, res) => {
         });
         await document.save();
 
-        res.status(201).json({ message: "Document uploaded and validated successfully" });
+        res.status(201).json({ message: "Document uploaded successfully" });
     } catch (err) {
         console.error("Error during document upload:", err);
         res.status(500).json({ error: err.message });
     }
 });
 
-
-
+// Get Student Documents
 app.get("/student/documents/:id", async (req, res) => {
     const { id } = req.params;
     try {
@@ -225,7 +207,7 @@ app.get("/student/documents/:id", async (req, res) => {
         // Convert file data to base64 for the frontend
         const formattedDocuments = documents.map((doc) => ({
             _id: doc._id,
-            fileData: doc.fileData.toString("base64"), // Convert buffer to base64
+            fileData: doc.fileData.toString("base64"),
             fileType: doc.fileType,
             status: doc.status,
         }));
@@ -236,17 +218,16 @@ app.get("/student/documents/:id", async (req, res) => {
     }
 });
 
-
-//
+// Admin: Get All Documents
 app.get("/admin/documents", async (req, res) => {
     try {
         const documents = await Document.find().populate("studentId", "firstName lastName email");
-        
+
         // Convert file data to base64 for the frontend
         const formattedDocuments = documents.map((doc) => ({
             _id: doc._id,
             studentId: doc.studentId,
-            fileData: doc.fileData.toString("base64"), // Convert buffer to base64
+            fileData: doc.fileData.toString("base64"),
             fileType: doc.fileType,
             status: doc.status,
         }));
@@ -257,9 +238,7 @@ app.get("/admin/documents", async (req, res) => {
     }
 });
 
-
-
-
+// Admin: Verify Document (add logo)
 app.post("/admin/verify/:id", async (req, res) => {
     const { id } = req.params;
     try {
@@ -291,9 +270,7 @@ app.post("/admin/verify/:id", async (req, res) => {
     }
 });
 
-
-
-
+// Admin: Reject Document
 app.delete("/admin/reject/:id", async (req, res) => {
     const { id } = req.params;
     try {
@@ -311,4 +288,3 @@ const isLocal = process.env.NODE_ENV !== "production";
 const host = isLocal ? "127.0.0.1" : "13.48.234.161";
 
 app.listen(PORT, () => console.log(`Server running on http://${host}:${PORT}`));
-
