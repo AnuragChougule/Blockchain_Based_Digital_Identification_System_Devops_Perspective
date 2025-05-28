@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
     ? "http://127.0.0.1:5000"
-    : "http://13.49.241.84:5000";
+    : "http://13.48.234.161:5000";
 
 const response = await fetch(`${baseURL}/admin/documents`);
 
@@ -74,7 +74,7 @@ async function handleAction(docId, action, row, verifyButton, rejectButton) {
     try {
         const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
     ? "http://127.0.0.1:5000"
-    : "http://13.49.241.84:5000";
+    : "http://13.48.234.161:5000";
 
         const url = `${baseURL}/admin/${action}/${docId}`;
         const method = action === "verify" ? "POST" : "DELETE";
