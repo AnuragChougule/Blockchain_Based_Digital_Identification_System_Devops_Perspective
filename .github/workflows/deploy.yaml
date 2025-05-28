@@ -54,13 +54,17 @@ jobs:
             sudo apt install -y nodejs npm git | tee ~/apt-install.log
             node -v && npm -v | tee ~/node-npm-version.log
 
+            # Set up git credentials for private repo access
+            git config --global credential.helper store
+            echo "https://QadirTernikar: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@github.com" > ~/.git-credentials
+
             if [ -d "DevOps/.git" ]; then
               cd DevOps
               git reset --hard HEAD
               git pull | tee ~/git-pull.log
               cd ..
             else
-              git clone https://github.com/AnuragChougule/DevOps.git | tee ~/git-clone.log
+              git clone https://QadirTernikar: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@github.com/AnuragChougule/DevOps.git | tee ~/git-clone.log
             fi
 
             cd DevOps/backend
