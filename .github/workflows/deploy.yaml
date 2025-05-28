@@ -15,7 +15,6 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           cat << 'EOF' > ~/.ssh/id_rsa
-          # (Insert your private key here)
           -----BEGIN RSA PRIVATE KEY-----
           MIIEowIBAAKCAQEAmW3s2jdmInE0oxHGW7tgoEZaXOhjUVCbMDLTCPRH+D3YuXDL
           5dOCOyzxUJEfc6ASVY9wlqUzUHMisnCxV8xvpsCSWkO+vZNL8DwPJ7FISzH0tox5
@@ -55,7 +54,15 @@ jobs:
             sudo apt install -y nodejs npm git | tee ~/apt-install.log
             node -v && npm -v | tee ~/node-npm-version.log
 
-            git clone https://github.com/AnuragChougule/DevOps.git | tee ~/git-clone.log
+            if [ -d "DevOps/.git" ]; then
+              cd DevOps
+              git reset --hard HEAD
+              git pull | tee ~/git-pull.log
+              cd ..
+            else
+              git clone https://github.com/AnuragChougule/DevOps.git | tee ~/git-clone.log
+            fi
+
             cd DevOps/backend
 
             rm -rf node_modules | tee ~/rm-node_modules.log
