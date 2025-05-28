@@ -66,6 +66,7 @@ jobs:
             npm install
 
             sudo npm install -g pm2
+            sudo npm install -g truffle
             pm2 delete backend || true
             pm2 start app.js --name backend
 
