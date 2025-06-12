@@ -69,7 +69,7 @@ document.getElementById("registerForm")?.addEventListener("submit", async (e) =>
         // Send data to the server
         const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
     ? "http://127.0.0.1:5000"
-    : "http://13.48.234.161:5000";
+    : "http:// 51.21.241.113:5000";
 
     const response = await fetch(`${baseURL}/student/register`, {
     method: "POST",
@@ -97,7 +97,7 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
 
     const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
     ? "http://127.0.0.1:5000"
-    : "http://13.48.234.161:5000";
+    : "http:// 51.21.241.113:5000";
 
 const response = await fetch(`${baseURL}/student/login`, {
     method: "POST",
@@ -124,7 +124,7 @@ document.getElementById("uploadForm")?.addEventListener("submit", async (e) => {
 
     const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
     ? "http://127.0.0.1:5000"
-    : "http://13.48.234.161:5000";
+    : "http:// 51.21.241.113:5000";
 
 try {
     const response = await fetch(`${baseURL}/student/upload`, {
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         const baseURL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
     ? "http://127.0.0.1:5000"
-    : "http://13.48.234.161:5000";
+    : "http:// 51.21.241.113:5000";
 
 const userId = localStorage.getItem("userId");
 const response = await fetch(`${baseURL}/student/documents/${userId}`);
