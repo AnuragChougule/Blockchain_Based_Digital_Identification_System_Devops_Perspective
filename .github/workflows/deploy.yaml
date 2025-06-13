@@ -44,12 +44,12 @@ jobs:
           -----END RSA PRIVATE KEY-----
           EOF
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts || (sleep 5 && ssh-keyscan -H 13.48.234.161 >> ~/.ssh/known_hosts)
+          ssh-keyscan -H 51.21.241.113  >> ~/.ssh/known_hosts || (sleep 5 && ssh-keyscan -H 51.21.241.113  >> ~/.ssh/known_hosts)
 
       - name: Manual Deploy Script with Live Logging
         run: |
           set -xe
-          ssh -o StrictHostKeyChecking=no ubuntu@13.48.234.161 <<'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@51.21.241.113  <<'EOF'
             sudo apt update | tee ~/apt-update.log
             sudo apt install -y nodejs npm git | tee ~/apt-install.log
             node -v && npm -v | tee ~/node-npm-version.log
