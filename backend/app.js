@@ -285,6 +285,6 @@ app.delete("/admin/reject/:id", async (req, res) => {
 // Start Server
 const PORT = 5000;
 const isLocal = process.env.NODE_ENV !== "production";
-const host = isLocal ? "127.0.0.1" : "13.48.234.161";
+const host = isLocal ? "127.0.0.1" : "51.21.241.113";
 
 app.listen(PORT, () => console.log(`Server running on http://${host}:${PORT}`));
