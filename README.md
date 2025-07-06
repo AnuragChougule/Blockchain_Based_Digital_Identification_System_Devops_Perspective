@@ -176,4 +176,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-> 📧 For queries, reach out at: [anuragchougule0160@gmail.com]
+## Contact
+
+📫 For queries, reach out at: [anuragchougule010@gmail.com](mailto:anuragchougule010@gmail.com)
+
