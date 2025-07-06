@@ -176,4 +176,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-> **Tip:** For any issues or questions, open an issue in this repository or contact the maintainer.
+> 📧 For queries, reach out at: [anuragchougule0160@gmail.com]
